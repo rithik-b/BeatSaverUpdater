@@ -22,6 +22,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Reference Include="BeatSaberPlaylistsLib">
+		  <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Beat Saber\Libs\BeatSaberPlaylistsLib.dll</HintPath>
+		  <Private>False</Private>
+		</Reference>
 		<Reference Include="BeatSaverSharp">
 		  <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Beat Saber\Libs\BeatSaverSharp.dll</HintPath>
 		  <Private>False</Private>

@@ -31,7 +31,13 @@ namespace BeatSaverUpdater
             {
                 Container.BindInterfacesTo<UpdateButton>().AsSingle();
                 Container.Bind<PopupModal>().AsSingle();
+
                 Container.BindInterfacesTo<FavouritesMigrator>().AsSingle();
+                var beatSaberPlaylistsLib = PluginManager.GetPluginFromId("BeatSaberPlaylistsLib");
+                if (beatSaberPlaylistsLib != null)
+                {
+                    Container.BindInterfacesTo<PlaylistMigrator>().AsSingle();
+                }
             });
         }
 

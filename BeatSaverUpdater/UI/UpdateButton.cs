@@ -170,7 +170,7 @@ namespace BeatSaverUpdater.UI
             {
                 foreach (var migrator in migrators)
                 {
-                    migrator.MigrateMap(oldLevel, downloadedLevel);
+                    Task.Run(() => migrator.MigrateMap(oldLevel, downloadedLevel));
                 }
             }
         }
