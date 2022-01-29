@@ -181,16 +181,28 @@ namespace BeatSaverUpdater.UI
             }
         }
 
-        private void UpdateReferences(CustomPreviewBeatmapLevel? oldLevel, CustomPreviewBeatmapLevel downloadedLevel)
+        private async void UpdateReferences(CustomPreviewBeatmapLevel? oldLevel, CustomPreviewBeatmapLevel downloadedLevel)
         {
-            popupModal.HideModal();
             if (oldLevel != null)
             {
-                foreach (var migrator in migrators)
+                popupModal.ShowLoadingModal("Migrating References");
+                await Task.Run(() => UpdateReferencesAsync(oldLevel, downloadedLevel));
+                var downloadedLevelAfterUpdate = SongCore.Loader.GetLevelByHash(downloadedLevelHash ?? "");
+                if (downloadedLevelAfterUpdate != null)
                 {
-                    Task.Run(() => migrator.MigrateMap(oldLevel, downloadedLevel));
+                    levelCollectionNavigationController.SelectLevel(downloadedLevelAfterUpdate);
                 }
             }
+            popupModal.HideModal();
+        }
+
+        private void UpdateReferencesAsync(CustomPreviewBeatmapLevel oldLevel, CustomPreviewBeatmapLevel downloadedLevel)
+        {
+            foreach (var migrator in migrators)
+            {
+                migrator.MigrateMap(oldLevel, downloadedLevel);
+            }
+            SongCore.Loader.Instance.DeleteSong(oldLevel.customLevelPath);
         }
     }
 }

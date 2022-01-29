@@ -24,6 +24,7 @@ namespace BeatSaverUpdater.UI
         private string _primaryButtonText = "Yes";
         private string _secondaryButtonText = "No";
         private bool _primaryButtonActive = true;
+        private bool _secondaryButtonActive = true;
 
         private LoadingControl? loadingControl;
 
@@ -69,8 +70,7 @@ namespace BeatSaverUpdater.UI
             primaryButtonPressed = primaryButtonPressedCallBack;
             secondaryButtonPressed = secondaryButtonPressedCallback;
 
-            SetDownloading(false);
-
+            PromptMode();
             parserParams.EmitEvent("open-modal");
         }
 
@@ -83,8 +83,22 @@ namespace BeatSaverUpdater.UI
             SecondaryButtonText = secondaryButtonText;
             secondaryButtonPressed = secondaryButtonPressedCallback;
 
-            SetDownloading(true);
+            DownloadingMode();
+            parserParams.EmitEvent("open-modal");
+        }
 
+        public void ShowLoadingModal(string text)
+        {
+            Parse();
+            modalTransform.localPosition = modalPosition;
+
+            Text = text;
+            if (loadingControl != null)
+            {
+                loadingControl.ShowLoading(" ");
+            }
+
+            LoadingMode();
             parserParams.EmitEvent("open-modal");
         }
 
@@ -102,12 +116,33 @@ namespace BeatSaverUpdater.UI
 
         // Methods
 
-        private void SetDownloading(bool isDownloading)
+        private void PromptMode()
         {
-            PrimaryButtonActive = !isDownloading;
+            PrimaryButtonActive = true;
+            SecondaryButtonActive = true;
             if (loadingControl != null)
             {
-                loadingControl.gameObject.SetActive(isDownloading);
+                loadingControl.gameObject.SetActive(false);
+            }
+        }
+
+        private void DownloadingMode()
+        {
+            PrimaryButtonActive = false;
+            SecondaryButtonActive = true;
+            if (loadingControl != null)
+            {
+                loadingControl.gameObject.SetActive(true);
+            }
+        }
+
+        private void LoadingMode()
+        {
+            PrimaryButtonActive = false;
+            SecondaryButtonActive = false;
+            if (loadingControl != null)
+            {
+                loadingControl.gameObject.SetActive(true);
             }
         }
 
@@ -168,6 +203,17 @@ namespace BeatSaverUpdater.UI
             {
                 _primaryButtonActive = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PrimaryButtonActive)));
+            }
+        }
+
+        [UIValue("secondary-button-active")]
+        private bool SecondaryButtonActive
+        {
+            get => _secondaryButtonActive;
+            set
+            {
+                _secondaryButtonActive = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SecondaryButtonActive)));
             }
         }
 

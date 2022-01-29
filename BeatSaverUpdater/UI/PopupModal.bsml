@@ -4,7 +4,7 @@
 			<text text='~text' italics='true' word-wrapping='true' align='Center' />
 			<horizontal>
 				<primary-button text='~primary-button-text' italics='true' active='~primary-button-active' on-click='primary-button-pressed' min-width='16' pref-height='8' />
-				<button text='~secondary-button-text' italics='true' on-click='secondary-button-pressed' click-event='close-modal' pref-width='16' pref-height='8' />
+				<button text='~secondary-button-text' italics='true' active='~secondary-button-active' on-click='secondary-button-pressed' click-event='close-modal' pref-width='16' pref-height='8' />
 			</horizontal>
 		</vertical>
 	</modal>
