@@ -128,8 +128,20 @@ namespace BeatSaverUpdater.UI
             }
         }
 
-        private void Clicked(PointerEventData _)
+        private async void Clicked(PointerEventData _)
         {
+            var newHash = (await standardLevelDetailViewController.beatmapLevel.GetBeatSaverBeatmap(CancellationToken.None))?.LatestVersion.Hash;
+
+            if (newHash != null)
+            {
+                var newLevel = SongCore.Loader.GetLevelByHash(newHash ?? "");
+                if (newLevel != null)
+                {
+                    popupModal.ShowYesNoModal("Updated map already exists!", () => OpenMap(newLevel), "Open Map", "Dismiss");
+                    return;
+                }
+            }
+
             popupModal.ShowYesNoModal("This map has an update on BeatSaver. Do you want to download it?", UpdateRequested);
         }
 
@@ -147,7 +159,13 @@ namespace BeatSaverUpdater.UI
             }
         }
 
-        private void OnSongsLoaded(SongCore.Loader arg1, System.Collections.Concurrent.ConcurrentDictionary<string, CustomPreviewBeatmapLevel> arg2)
+        private void OpenMap(CustomPreviewBeatmapLevel beatmapLevel)
+        {
+            popupModal.HideModal();
+            levelCollectionNavigationController.SelectLevel(beatmapLevel);
+        }
+
+        private void OnSongsLoaded(SongCore.Loader _, System.Collections.Concurrent.ConcurrentDictionary<string, CustomPreviewBeatmapLevel> __)
         {
             SongCore.Loader.SongsLoadedEvent -= OnSongsLoaded;
             var oldLevel = SongCore.Loader.GetLevelByHash(oldLevelHash ?? "");
