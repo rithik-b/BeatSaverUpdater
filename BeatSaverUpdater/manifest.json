@@ -1,16 +1,21 @@
 ﻿{
-  "$schema": "https://raw.githubusercontent.com/bsmg/BSIPA-MetadataFileSchema/master/Schema.json",
-  "id": "BeatSaverUpdater",
-  "name": "BeatSaverUpdater",
-  "author": "PixelBoom",
-  "version": "0.0.1",
-  "description": "Alerts you of updates to maps and updates them to the latest version.",
-  "gameVersion": "1.19.0",
+    "$schema": "https://raw.githubusercontent.com/bsmg/BSIPA-MetadataFileSchema/master/Schema.json",
+    "id": "BeatSaverUpdater",
+    "name": "BeatSaverUpdater",
+    "author": "PixelBoom",
+    "version": "0.0.1",
+    "description": "Alerts you of updates to maps and updates them to the latest version.",
+    "gameVersion": "1.19.0",
+    "icon": "BeatSaverUpdater.Images.Logo.png",
     "dependsOn": {
         "BSIPA": "^4.2.1",
         "BeatSaberMarkupLanguage": "^1.6.1",
         "SongCore": "^3.8.0",
         "SiraUtil": "^3.0.3",
         "SongDetailsCache": "^1.1.11"
+    },
+    "links": {
+        "project-source": "https://github.com/rithik-b/BeatSaverUpdater",
+        "donate": "https://ko-fi.com/pixelboom"
     }
 }
