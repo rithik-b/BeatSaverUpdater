@@ -11,9 +11,9 @@ namespace BeatSaverUpdater
     [Plugin(RuntimeOptions.DynamicInit), NoEnableDisable]
     public class Plugin
     {
-        internal static Plugin Instance { get; private set; }
-        internal static IPALogger Log { get; private set; }
-        internal static PluginMetadata Metadata { get; private set; }
+        internal static Plugin Instance { get; private set; } = null!;
+        internal static IPALogger Log { get; private set; } = null!;
+        internal static PluginMetadata Metadata { get; private set; } = null!;
 
         [Init]
         /// <summary>

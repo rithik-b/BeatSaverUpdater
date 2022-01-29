@@ -4,7 +4,7 @@
   "name": "BeatSaverUpdater",
   "author": "PixelBoom",
   "version": "0.0.1",
-  "description": "Updates maps from BeatSaver to the latest version.",
+  "description": "Alerts you of updates to maps and updates them to the latest version.",
   "gameVersion": "1.19.0",
     "dependsOn": {
         "BSIPA": "^4.2.1",

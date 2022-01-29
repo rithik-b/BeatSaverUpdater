@@ -3,6 +3,8 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using BeatSaberMarkupLanguage.Components;
+using HMUI;
+using IPA.Utilities;
 using SongDetailsCache;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -18,14 +20,17 @@ namespace BeatSaverUpdater.UI
         private SongDetails? songDetails;
         private CancellationTokenSource? tokenSource;
         private string? downloadedLevelHash;
+
         private readonly DiContainer container;
+        private readonly HoverHintController hoverHintController;
         private readonly LevelCollectionNavigationController levelCollectionNavigationController;
         private readonly StandardLevelDetailViewController standardLevelDetailViewController;
         private readonly PopupModal popupModal;
 
-        public UpdateButton(DiContainer container, LevelCollectionNavigationController levelCollectionNavigationController, StandardLevelDetailViewController standardLevelDetailViewController, PopupModal popupModal)
+        public UpdateButton(DiContainer container, HoverHintController hoverHintController, LevelCollectionNavigationController levelCollectionNavigationController, StandardLevelDetailViewController standardLevelDetailViewController, PopupModal popupModal)
         {
             this.container = container;
+            this.hoverHintController = hoverHintController;
             this.levelCollectionNavigationController = levelCollectionNavigationController;
             this.standardLevelDetailViewController = standardLevelDetailViewController;
             this.popupModal = popupModal;
@@ -82,6 +87,10 @@ namespace BeatSaverUpdater.UI
             canvas.additionalShaderChannels |= AdditionalCanvasShaderChannels.Tangent;
             canvas.additionalShaderChannels |= AdditionalCanvasShaderChannels.Normal;
             container.InstantiateComponent<VRGraphicRaycaster>(gameObject);
+
+            var hoverHint= image.gameObject.AddComponent<HoverHint>();
+            hoverHint.SetField("_hoverHintController", hoverHintController);
+            hoverHint.text = "Update Map!";
 
             return image;
         }

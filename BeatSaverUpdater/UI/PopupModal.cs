@@ -7,7 +7,6 @@ using BeatSaberMarkupLanguage.Parser;
 using HMUI;
 using IPA.Utilities;
 using UnityEngine;
-using Component = UnityEngine.Component;
 using Object = UnityEngine.Object;
 
 namespace BeatSaverUpdater.UI
@@ -16,7 +15,7 @@ namespace BeatSaverUpdater.UI
     {
         private readonly StandardLevelDetailViewController levelDetailViewController;
         private bool parsed;
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         private Action? primaryButtonPressed;
         private Action? secondaryButtonPressed;
