@@ -173,7 +173,7 @@ namespace BeatSaverUpdater.UI
             if (downloadedLevel != null)
             {
                 levelCollectionNavigationController.SelectLevel(downloadedLevel);
-                popupModal.ShowYesNoModal("Map Updated!", () => UpdateReferences(oldLevel, downloadedLevel), "Update Map References", "Dismiss");
+                popupModal.ShowYesNoModal("Map Updated!\nWould you also like to update all of its references?", () => UpdateReferences(oldLevel, downloadedLevel), "Update", "Dismiss", true);
             }
             else
             {

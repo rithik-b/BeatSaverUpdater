@@ -1,11 +1,12 @@
 ﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
 	<modal id='modal' show-event='open-modal' hide-event='close-modal' clickerino-offerino-closerino='false' size-delta-x='65' size-delta-y='35'>
-		<vertical id='vertical' horizontal-fit='PreferredSize' vertical-fit='PreferredSize' spacing='3' preferred-width='60' preferred-height='30'>
+		<vertical id='vertical' horizontal-fit='PreferredSize' vertical-fit='PreferredSize' preferred-width='60' preferred-height='30' anchor-pos-y='-2'>
 			<text text='~text' italics='true' word-wrapping='true' align='Center' />
 			<horizontal>
 				<primary-button text='~primary-button-text' italics='true' active='~primary-button-active' on-click='primary-button-pressed' min-width='16' pref-height='8' />
 				<button text='~secondary-button-text' italics='true' active='~secondary-button-active' on-click='secondary-button-pressed' click-event='close-modal' pref-width='16' pref-height='8' />
 			</horizontal>
 		</vertical>
+		<primary-button text='?' hover-hint='~references-hint' active='~references-active' anchor-pos-x='27' anchor-pos-y='-0.5' pref-height='6.5' />
 	</modal>
 </bg>

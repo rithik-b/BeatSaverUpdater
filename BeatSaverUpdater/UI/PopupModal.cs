@@ -25,6 +25,7 @@ namespace BeatSaverUpdater.UI
         private string _secondaryButtonText = "No";
         private bool _primaryButtonActive = true;
         private bool _secondaryButtonActive = true;
+        private bool _referencesActive = false;
 
         private LoadingControl? loadingControl;
 
@@ -58,7 +59,7 @@ namespace BeatSaverUpdater.UI
             }
         }
 
-        public void ShowYesNoModal(string text, Action? primaryButtonPressedCallBack, string primaryButtonText = "Yes", string secondaryButtonText = "No", Action? secondaryButtonPressedCallback = null)
+        public void ShowYesNoModal(string text, Action? primaryButtonPressedCallBack, string primaryButtonText = "Yes", string secondaryButtonText = "No", bool referencesActive = false, Action? secondaryButtonPressedCallback = null)
         {
             Parse();
             modalTransform.localPosition = modalPosition;
@@ -70,7 +71,7 @@ namespace BeatSaverUpdater.UI
             primaryButtonPressed = primaryButtonPressedCallBack;
             secondaryButtonPressed = secondaryButtonPressedCallback;
 
-            PromptMode();
+            PromptMode(referencesActive);
             parserParams.EmitEvent("open-modal");
         }
 
@@ -116,10 +117,11 @@ namespace BeatSaverUpdater.UI
 
         // Methods
 
-        private void PromptMode()
+        private void PromptMode(bool referencesActive)
         {
             PrimaryButtonActive = true;
             SecondaryButtonActive = true;
+            ReferencesActive = referencesActive;
             if (loadingControl != null)
             {
                 loadingControl.gameObject.SetActive(false);
@@ -130,6 +132,7 @@ namespace BeatSaverUpdater.UI
         {
             PrimaryButtonActive = false;
             SecondaryButtonActive = true;
+            ReferencesActive = false;
             if (loadingControl != null)
             {
                 loadingControl.gameObject.SetActive(true);
@@ -140,6 +143,7 @@ namespace BeatSaverUpdater.UI
         {
             PrimaryButtonActive = false;
             SecondaryButtonActive = false;
+            ReferencesActive = false;
             if (loadingControl != null)
             {
                 loadingControl.gameObject.SetActive(true);
@@ -214,6 +218,21 @@ namespace BeatSaverUpdater.UI
             {
                 _secondaryButtonActive = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SecondaryButtonActive)));
+            }
+        }
+
+        [UIValue("references-hint")]
+        private string ReferencesHint => "Updating References will\n-Delete the old version of the map\n-Replace the old version with the new version in favourites (if favourited)" +
+                                         (Plugin.PlaylistsLibInstalled ? "\n-Replace the old version with the new version in all non-syncable playlists" : "");
+
+        [UIValue("references-active")]
+        private bool ReferencesActive
+        {
+            get => _referencesActive;
+            set
+            {
+                _referencesActive = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ReferencesActive)));
             }
         }
 
