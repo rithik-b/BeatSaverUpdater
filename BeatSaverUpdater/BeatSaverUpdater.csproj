@@ -23,19 +23,19 @@
 
 	<ItemGroup>
 		<Reference Include="BeatSaberPlaylistsLib">
-		  <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Beat Saber\Libs\BeatSaberPlaylistsLib.dll</HintPath>
+		  <HintPath>$(BeatSaberDir)\Libs\BeatSaberPlaylistsLib.dll</HintPath>
 		  <Private>False</Private>
 		</Reference>
 		<Reference Include="BeatSaverSharp">
-		  <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Beat Saber\Libs\BeatSaverSharp.dll</HintPath>
+		  <HintPath>$(BeatSaberDir)\Libs\BeatSaverSharp.dll</HintPath>
 		  <Private>False</Private>
 		</Reference>
 		<Reference Include="Hive.Versioning">
-		  <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Beat Saber\Libs\Hive.Versioning.dll</HintPath>
+		  <HintPath>$(BeatSaberDir)\Libs\Hive.Versioning.dll</HintPath>
 		  <Private>False</Private>
 		</Reference>
 		<Reference Include="SongDetailsCache">
-		  <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Beat Saber\Libs\SongDetailsCache.dll</HintPath>
+		  <HintPath>$(BeatSaberDir)\Libs\SongDetailsCache.dll</HintPath>
 		  <Private>False</Private>
 		</Reference>
 		<Reference Include="UnityEngine.CoreModule">
@@ -75,11 +75,11 @@
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="UnityEngine.UIModule">
-		  <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Beat Saber\Beat Saber_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+		  <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.UIModule.dll</HintPath>
 		  <Private>False</Private>
 		</Reference>
 		<Reference Include="VRUI">
-		  <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Beat Saber\Beat Saber_Data\Managed\VRUI.dll</HintPath>
+		  <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\VRUI.dll</HintPath>
 		  <Private>False</Private>
 		</Reference>
 		<Reference Include="Zenject">
