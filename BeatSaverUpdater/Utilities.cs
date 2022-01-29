@@ -39,16 +39,21 @@ namespace BeatSaverUpdater
             if (!token.IsCancellationRequested)
             {
                 cachedMaps ??= new ConcurrentDictionary<string, Beatmap?>();
-                cachedMaps.TryAdd(hash, map);
+                if (map != null && !string.Equals(map.LatestVersion.Hash, hash, StringComparison.OrdinalIgnoreCase))
+                {
+                    cachedMaps.TryAdd(hash, map);
+                    return map;
+                }
+                cachedMaps.TryAdd(hash, null);
             }
 
-            return map;
+            return null;
         }
 
         public static async Task<bool> NeedsUpdate(this IPreviewBeatmapLevel beatmapLevel, CancellationToken token)
         {
             var map = await beatmapLevel.GetBeatSaverBeatmap(token);
-            return map != null && !string.Equals(map.LatestVersion.Hash, beatmapLevel.GetBeatmapHash(), StringComparison.InvariantCultureIgnoreCase);
+            return map != null;
         }
 
         public static async Task<string?> UpdateBeatmap(this IPreviewBeatmapLevel beatmapLevel, CancellationToken token, IProgress<double> progress)
