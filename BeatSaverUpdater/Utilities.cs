@@ -7,7 +7,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using BeatSaverSharp;
 using BeatSaverSharp.Models;
-using IPA.Utilities;
+using Newtonsoft.Json.Linq;
+using SongCore;
 
 namespace BeatSaverUpdater
 {
@@ -18,6 +19,23 @@ namespace BeatSaverUpdater
 
         public static string GetBeatmapHash(this IPreviewBeatmapLevel beatmapLevel) =>
             beatmapLevel.levelID.Replace(CustomLevelLoader.kCustomLevelPrefixId, "");
+
+        public static bool IsBeatSage(this CustomPreviewBeatmapLevel beatmapLevel)
+        {
+            var songData = Loader.Instance.LoadCustomLevelSongData(beatmapLevel.customLevelPath);
+            if (songData != null)
+            {
+                var info = JObject.Parse(songData.RawSongData);
+                if (info.TryGetValue("_customData", out var c) && c is JObject customData)
+                {
+                    if (customData.TryGetValue("_editors", out var e) && e is JObject editors)
+                    {
+                        return editors.ContainsKey("beatsage");
+                    }
+                }
+            }
+            return false;
+        }
 
         public static async Task<Beatmap?> GetBeatSaverBeatmap(this IPreviewBeatmapLevel beatmapLevel, CancellationToken token)
         {
@@ -78,7 +96,7 @@ namespace BeatSaverUpdater
                     var zip = await map.LatestVersion.DownloadZIP(token, progress).ConfigureAwait(false);
                     if (zip != null && !token.IsCancellationRequested)
                     {
-                        await ExtractZipAsync(zip, customSongsPath, FolderNameForBeatsaverMap(map)).ConfigureAwait(false);
+                        await ExtractZipAsync(zip, customSongsPath, FolderNameForBeatSaverMap(map)).ConfigureAwait(false);
                         return map.LatestVersion.Hash;
                     }
 
@@ -97,7 +115,7 @@ namespace BeatSaverUpdater
         }
 
 
-        private static string FolderNameForBeatsaverMap(Beatmap song)
+        private static string FolderNameForBeatSaverMap(Beatmap song)
         {
             // A workaround for the max path issue and long folder names
             string longFolderName = song.ID + " (" + song.Metadata.LevelAuthorName + " - " + song.Metadata.SongName;

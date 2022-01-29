@@ -110,7 +110,7 @@ namespace BeatSaverUpdater.UI
 
             if (image != null && songDetails != null)
             {
-                if (beatmapLevel is CustomPreviewBeatmapLevel customPreviewBeatmapLevel && !customPreviewBeatmapLevel.levelID.EndsWith(" WIP"))
+                if (beatmapLevel is CustomPreviewBeatmapLevel customPreviewBeatmapLevel && !customPreviewBeatmapLevel.levelID.EndsWith(" WIP") && !customPreviewBeatmapLevel.IsBeatSage())
                 {
                     if (!songDetails.songs.FindByHash(customPreviewBeatmapLevel.GetBeatmapHash(), out var song))
                     {
