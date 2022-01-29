@@ -1,0 +1,16 @@
+﻿{
+  "$schema": "https://raw.githubusercontent.com/bsmg/BSIPA-MetadataFileSchema/master/Schema.json",
+  "id": "BeatSaverUpdater",
+  "name": "BeatSaverUpdater",
+  "author": "PixelBoom",
+  "version": "0.0.1",
+  "description": "Updates maps from BeatSaver to the latest version.",
+  "gameVersion": "1.19.0",
+    "dependsOn": {
+        "BSIPA": "^4.2.1",
+        "BeatSaberMarkupLanguage": "^1.6.1",
+        "SongCore": "^3.8.0",
+        "SiraUtil": "^3.0.3",
+        "SongDetailsCache": "^1.1.11"
+    }
+}
