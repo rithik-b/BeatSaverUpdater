@@ -1,4 +1,5 @@
-﻿using BeatSaverUpdater.UI;
+﻿using BeatSaverUpdater.Migration;
+using BeatSaverUpdater.UI;
 using IPA;
 using IPA.Config;
 using IPA.Config.Stores;
@@ -30,6 +31,7 @@ namespace BeatSaverUpdater
             {
                 Container.BindInterfacesTo<UpdateButton>().AsSingle();
                 Container.Bind<PopupModal>().AsSingle();
+                Container.BindInterfacesTo<FavouritesMigrator>().AsSingle();
             });
         }
 

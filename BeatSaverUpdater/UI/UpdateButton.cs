@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using BeatSaberMarkupLanguage.Components;
+using BeatSaverUpdater.Migration;
 using HMUI;
 using IPA.Utilities;
 using SongDetailsCache;
@@ -19,6 +21,7 @@ namespace BeatSaverUpdater.UI
         private ClickableImage? image;
         private SongDetails? songDetails;
         private CancellationTokenSource? tokenSource;
+        private string? oldLevelHash;
         private string? downloadedLevelHash;
 
         private readonly DiContainer container;
@@ -26,14 +29,17 @@ namespace BeatSaverUpdater.UI
         private readonly LevelCollectionNavigationController levelCollectionNavigationController;
         private readonly StandardLevelDetailViewController standardLevelDetailViewController;
         private readonly PopupModal popupModal;
+        private readonly List<IMigrator> migrators;
 
-        public UpdateButton(DiContainer container, HoverHintController hoverHintController, LevelCollectionNavigationController levelCollectionNavigationController, StandardLevelDetailViewController standardLevelDetailViewController, PopupModal popupModal)
+        public UpdateButton(DiContainer container, HoverHintController hoverHintController, LevelCollectionNavigationController levelCollectionNavigationController,
+            StandardLevelDetailViewController standardLevelDetailViewController, PopupModal popupModal, List<IMigrator> migrators)
         {
             this.container = container;
             this.hoverHintController = hoverHintController;
             this.levelCollectionNavigationController = levelCollectionNavigationController;
             this.standardLevelDetailViewController = standardLevelDetailViewController;
             this.popupModal = popupModal;
+            this.migrators = migrators;
         }
 
         public void Initialize()
@@ -132,6 +138,7 @@ namespace BeatSaverUpdater.UI
             tokenSource?.Cancel();
             tokenSource = new CancellationTokenSource();
             popupModal.ShowDownloadingModal("Updating map", () => tokenSource.Cancel());
+            oldLevelHash = standardLevelDetailViewController.beatmapLevel.GetBeatmapHash();
             downloadedLevelHash = await standardLevelDetailViewController.beatmapLevel.UpdateBeatmap(tokenSource.Token, popupModal);
             if (downloadedLevelHash != null)
             {
@@ -143,10 +150,12 @@ namespace BeatSaverUpdater.UI
         private void OnSongsLoaded(SongCore.Loader arg1, System.Collections.Concurrent.ConcurrentDictionary<string, CustomPreviewBeatmapLevel> arg2)
         {
             SongCore.Loader.SongsLoadedEvent -= OnSongsLoaded;
+            var oldLevel = SongCore.Loader.GetLevelByHash(oldLevelHash ?? "");
             var downloadedLevel = SongCore.Loader.GetLevelByHash(downloadedLevelHash ?? "");
             if (downloadedLevel != null)
             {
-                popupModal.ShowYesNoModal("Map Updated!", () => GoToLevel(downloadedLevel), "Go to map!", "Dismiss");
+                levelCollectionNavigationController.SelectLevel(downloadedLevel);
+                popupModal.ShowYesNoModal("Map Updated!", () => UpdateReferences(oldLevel, downloadedLevel), "Update Map References", "Dismiss");
             }
             else
             {
@@ -154,10 +163,16 @@ namespace BeatSaverUpdater.UI
             }
         }
 
-        private void GoToLevel(CustomPreviewBeatmapLevel downloadedLevel)
+        private void UpdateReferences(CustomPreviewBeatmapLevel? oldLevel, CustomPreviewBeatmapLevel downloadedLevel)
         {
             popupModal.HideModal();
-            levelCollectionNavigationController.SelectLevel(downloadedLevel);
+            if (oldLevel != null)
+            {
+                foreach (var migrator in migrators)
+                {
+                    migrator.MigrateMap(oldLevel, downloadedLevel);
+                }
+            }
         }
     }
 }
