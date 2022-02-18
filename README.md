@@ -5,6 +5,10 @@ Alerts you of updates to maps and updates them to the latest version.
 - Shows a button above a map if it is outdated, clicking on it will download an updated version
 - Option to delete old map after download and migrate its references (all favourites and non syncable playlists will have the map replaced)
 
+**Important:** 
+- This uses a cache of the BeatSaver database (using SongDetailsCache) so map updates won't show up immediately! Don't worry, this isn't a bug, just want to send as few requests to BeatSaver as possible.
+- This only accounts for maps that use BeatSaver's update feature and are uploaded on the same key. Reuploads do not count as an updated map.
+
 ## Download
 Download the latest version of the mod [here](https://github.com/rithik-b/BeatSaverUpdater/releases/tag/latest "here").
 To install, move the dll to your Plugins folder.
