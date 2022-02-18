@@ -10,7 +10,7 @@ Alerts you of updates to maps and updates them to the latest version.
 - This only accounts for maps that use BeatSaver's update feature and are uploaded on the same key. Reuploads do not count as an updated map.
 
 ## Download
-Download the latest version of the mod [here](https://github.com/rithik-b/BeatSaverUpdater/releases/tag/latest "here").
+Download the latest version of the mod [here](https://github.com/rithik-b/BeatSaverUpdater/releases/latest "here").
 To install, move the dll to your Plugins folder.
 
 **SongCore**, **BeatSaberMarkupLanguage (BSML)**, **SiraUtil** and **SongDetailsCache** are required for this mod, so please download the latest version from ModAssistant.
