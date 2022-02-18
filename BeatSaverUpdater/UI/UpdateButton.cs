@@ -26,16 +26,20 @@ namespace BeatSaverUpdater.UI
 
         private readonly DiContainer container;
         private readonly HoverHintController hoverHintController;
+        private readonly SelectLevelCategoryViewController selectLevelCategoryViewController;
+        private readonly IconSegmentedControl levelCategorySegmentedControl;
         private readonly LevelCollectionNavigationController levelCollectionNavigationController;
         private readonly StandardLevelDetailViewController standardLevelDetailViewController;
         private readonly PopupModal popupModal;
         private readonly List<IMigrator> migrators;
 
-        public UpdateButton(DiContainer container, HoverHintController hoverHintController, LevelCollectionNavigationController levelCollectionNavigationController,
-            StandardLevelDetailViewController standardLevelDetailViewController, PopupModal popupModal, List<IMigrator> migrators)
+        public UpdateButton(DiContainer container, HoverHintController hoverHintController, SelectLevelCategoryViewController selectLevelCategoryViewController,
+            LevelCollectionNavigationController levelCollectionNavigationController, StandardLevelDetailViewController standardLevelDetailViewController, PopupModal popupModal, List<IMigrator> migrators)
         {
             this.container = container;
             this.hoverHintController = hoverHintController;
+            this.selectLevelCategoryViewController = selectLevelCategoryViewController; 
+            levelCategorySegmentedControl = selectLevelCategoryViewController.GetField<IconSegmentedControl, SelectLevelCategoryViewController>("_levelFilterCategoryIconSegmentedControl");
             this.levelCollectionNavigationController = levelCollectionNavigationController;
             this.standardLevelDetailViewController = standardLevelDetailViewController;
             this.popupModal = popupModal;
@@ -137,7 +141,11 @@ namespace BeatSaverUpdater.UI
                 var newLevel = SongCore.Loader.GetLevelByHash(newHash ?? "");
                 if (newLevel != null)
                 {
-                    popupModal.ShowYesNoModal("Updated map already exists!", () => OpenMap(newLevel), "Open Map", "Dismiss");
+                    popupModal.ShowYesNoModal("Updated map already exists!", () =>
+                    {
+                        popupModal.HideModal();
+                        OpenMap(newLevel);
+                    }, "Open Map", "Dismiss");
                     return;
                 }
             }
@@ -161,7 +169,8 @@ namespace BeatSaverUpdater.UI
 
         private void OpenMap(CustomPreviewBeatmapLevel beatmapLevel)
         {
-            popupModal.HideModal();
+            levelCategorySegmentedControl.SelectCellWithNumber(3);
+            selectLevelCategoryViewController.LevelFilterCategoryIconSegmentedControlDidSelectCell(levelCategorySegmentedControl, 3);
             levelCollectionNavigationController.SelectLevel(beatmapLevel);
         }
 
@@ -172,7 +181,7 @@ namespace BeatSaverUpdater.UI
             var downloadedLevel = SongCore.Loader.GetLevelByHash(downloadedLevelHash ?? "");
             if (downloadedLevel != null)
             {
-                levelCollectionNavigationController.SelectLevel(downloadedLevel);
+                OpenMap(downloadedLevel);
                 popupModal.ShowYesNoModal("Map Updated!\nWould you also like to update all of its references?", () => UpdateReferences(oldLevel, downloadedLevel), "Update", "Dismiss", true);
             }
             else
@@ -190,7 +199,7 @@ namespace BeatSaverUpdater.UI
                 var downloadedLevelAfterUpdate = SongCore.Loader.GetLevelByHash(downloadedLevelHash ?? "");
                 if (downloadedLevelAfterUpdate != null)
                 {
-                    levelCollectionNavigationController.SelectLevel(downloadedLevelAfterUpdate);
+                    OpenMap(downloadedLevel);
                 }
             }
             popupModal.HideModal();
