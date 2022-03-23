@@ -26,6 +26,9 @@ namespace BeatSaverUpdater.UI
         private bool _primaryButtonActive = true;
         private bool _secondaryButtonActive = true;
         private bool _referencesActive = false;
+        
+        private bool _checkboxValue = false;
+        private bool _checkboxActive = false;
 
         private LoadingControl? loadingControl;
 
@@ -59,7 +62,7 @@ namespace BeatSaverUpdater.UI
             }
         }
 
-        public void ShowYesNoModal(string text, Action? primaryButtonPressedCallBack, string primaryButtonText = "Yes", string secondaryButtonText = "No", bool referencesActive = false, Action? secondaryButtonPressedCallback = null)
+        public void ShowYesNoModal(string text, Action? primaryButtonPressedCallBack, string primaryButtonText = "Yes", string secondaryButtonText = "No", bool referencesActive = false, Action? secondaryButtonPressedCallback = null, bool showCheckbox = false)
         {
             Parse();
             modalTransform.localPosition = modalPosition;
@@ -70,8 +73,9 @@ namespace BeatSaverUpdater.UI
 
             primaryButtonPressed = primaryButtonPressedCallBack;
             secondaryButtonPressed = secondaryButtonPressedCallback;
-
-            PromptMode(referencesActive);
+            
+            CheckboxValue = false;
+            PromptMode(referencesActive, showCheckbox);
             parserParams.EmitEvent("open-modal");
         }
 
@@ -117,11 +121,12 @@ namespace BeatSaverUpdater.UI
 
         // Methods
 
-        private void PromptMode(bool referencesActive)
+        private void PromptMode(bool referencesActive, bool showCheckbox)
         {
             PrimaryButtonActive = true;
             SecondaryButtonActive = true;
             ReferencesActive = referencesActive;
+            CheckboxActive = showCheckbox;
             if (loadingControl != null)
             {
                 loadingControl.gameObject.SetActive(false);
@@ -133,6 +138,7 @@ namespace BeatSaverUpdater.UI
             PrimaryButtonActive = false;
             SecondaryButtonActive = true;
             ReferencesActive = false;
+            CheckboxActive = false;
             if (loadingControl != null)
             {
                 loadingControl.gameObject.SetActive(true);
@@ -144,6 +150,7 @@ namespace BeatSaverUpdater.UI
             PrimaryButtonActive = false;
             SecondaryButtonActive = false;
             ReferencesActive = false;
+            CheckboxActive = false;
             if (loadingControl != null)
             {
                 loadingControl.gameObject.SetActive(true);
@@ -163,6 +170,9 @@ namespace BeatSaverUpdater.UI
             secondaryButtonPressed?.Invoke();
             secondaryButtonPressed = null;
         }
+        
+        [UIAction("toggle-checkbox")]
+        private void ToggleCheckbox() => CheckboxValue = !CheckboxValue;
 
         // Values
 
@@ -174,6 +184,30 @@ namespace BeatSaverUpdater.UI
             {
                 _text = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Text)));
+            }
+        }
+        
+        [UIValue("checkbox-active")]
+        private bool CheckboxActive
+        {
+            get => _checkboxActive;
+            set
+            {
+                _checkboxActive = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CheckboxActive)));
+            }
+        }
+
+        [UIValue("checkbox")]
+        private string Checkbox => CheckboxValue ? "☑" : "⬜";
+
+        public bool CheckboxValue
+        {
+            get => _checkboxValue;
+            private set
+            {
+                _checkboxValue = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Checkbox)));
             }
         }
 

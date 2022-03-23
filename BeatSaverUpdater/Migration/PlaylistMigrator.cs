@@ -4,14 +4,15 @@ namespace BeatSaverUpdater.Migration
 {
     internal class PlaylistMigrator : IMigrator
     {
-        public bool MigrateMap(IPreviewBeatmapLevel oldMap, IPreviewBeatmapLevel newMap)
+        public bool MigrateMap(CustomPreviewBeatmapLevel oldMap, CustomPreviewBeatmapLevel newMap)
         {
             var playlists = BeatSaberPlaylistsLib.PlaylistManager.DefaultManager.GetAllPlaylists(true);
             var preventDelete = false;
+            var mapHash = oldMap.GetBeatmapHash();
             
             foreach (var playlist in playlists)
             {
-                if (playlist.Any(s => s.PreviewBeatmapLevel == oldMap))
+                if (playlist.Any(s => s.Hash == mapHash))
                 {
                     if (playlist.TryGetCustomData("syncURL", out var sync))
                     {
@@ -19,7 +20,7 @@ namespace BeatSaverUpdater.Migration
                     }
                     else
                     {
-                        foreach (var song in playlist.Where(s => s.PreviewBeatmapLevel == oldMap))
+                        foreach (var song in playlist.Where(s => s.Hash == mapHash))
                         {
                             song.LevelId = newMap.levelID;
                         }
@@ -27,7 +28,7 @@ namespace BeatSaverUpdater.Migration
                     }
                 }
             }
-
+            
             return preventDelete;
         }
     }

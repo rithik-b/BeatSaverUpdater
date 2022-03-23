@@ -147,9 +147,17 @@ namespace BeatSaverUpdater.UI
                     {
                         popupModal.ShowYesNoModal("Updated map already exists!", () =>
                         {
-                            popupModal.HideModal();
-                            OpenMap(newLevel);
-                        }, "Open Map", "Dismiss");
+                            if (popupModal.CheckboxValue)
+                            {
+                                downloadedLevelHash = newHash;
+                                UpdateReferences(beatmapLevel, newLevel);
+                            }
+                            else
+                            {
+                                popupModal.HideModal();
+                                OpenMap(newLevel);
+                            }
+                        }, "Open Map", "Dismiss", showCheckbox: true, referencesActive: true);
                         return;
                     }
                 }

@@ -2,6 +2,10 @@
 	<modal id='modal' show-event='open-modal' hide-event='close-modal' clickerino-offerino-closerino='false' size-delta-x='65' size-delta-y='35'>
 		<vertical id='vertical' horizontal-fit='PreferredSize' vertical-fit='PreferredSize' preferred-width='60' preferred-height='30' anchor-pos-y='-2'>
 			<text text='~text' italics='true' word-wrapping='true' align='Center' />
+			<horizontal horizontal-fit='PreferredSize' spacing='1' active='~checkbox-active'>
+				<clickable-text text='~checkbox' on-click='toggle-checkbox' italics='false' />
+				<text text='Also migrate references to newer map' italics='true' word-wrapping='true' align='Left' />
+			</horizontal>
 			<horizontal>
 				<primary-button text='~primary-button-text' italics='true' active='~primary-button-active' on-click='primary-button-pressed' min-width='16' pref-height='8' />
 				<button text='~secondary-button-text' italics='true' active='~secondary-button-active' on-click='secondary-button-pressed' click-event='close-modal' pref-width='16' pref-height='8' />

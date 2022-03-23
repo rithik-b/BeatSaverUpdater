@@ -9,7 +9,7 @@
             this.playerDataModel = playerDataModel;
         }
 
-        public bool MigrateMap(IPreviewBeatmapLevel oldMap, IPreviewBeatmapLevel newMap)
+        public bool MigrateMap(CustomPreviewBeatmapLevel oldMap, CustomPreviewBeatmapLevel newMap)
         {
             if (playerDataModel.playerData.IsLevelUserFavorite(oldMap))
             {
