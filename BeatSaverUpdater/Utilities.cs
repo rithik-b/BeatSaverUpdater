@@ -19,23 +19,6 @@ namespace BeatSaverUpdater
         public static string GetBeatmapHash(this CustomPreviewBeatmapLevel beatmapLevel) =>
             SongCore.Utilities.Hashing.GetCustomLevelHash(beatmapLevel);
 
-        public static bool IsBeatSage(this CustomPreviewBeatmapLevel beatmapLevel)
-        {
-            var songData = Loader.Instance.LoadCustomLevelSongData(beatmapLevel.customLevelPath);
-            if (songData != null)
-            {
-                var info = JObject.Parse(songData.RawSongData);
-                if (info.TryGetValue("_customData", out var c) && c is JObject customData)
-                {
-                    if (customData.TryGetValue("_editors", out var e) && e is JObject editors)
-                    {
-                        return editors.ContainsKey("beatsage");
-                    }
-                }
-            }
-            return false;
-        }
-
         public static async Task<Beatmap?> GetBeatSaverBeatmap(this CustomPreviewBeatmapLevel beatmapLevel, CancellationToken token)
         {
             if (beatSaverInstance == null)

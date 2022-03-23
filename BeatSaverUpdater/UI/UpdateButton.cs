@@ -118,11 +118,12 @@ namespace BeatSaverUpdater.UI
         private async Task BeatmapSelected(IPreviewBeatmapLevel beatmapLevel)
         {
             tokenSource?.Cancel();
+            tokenSource?.Dispose();
             tokenSource = new CancellationTokenSource();
 
             if (image != null && songDetails != null)
             {
-                if (beatmapLevel is CustomPreviewBeatmapLevel customPreviewBeatmapLevel && !customPreviewBeatmapLevel.levelID.EndsWith(" WIP") && !customPreviewBeatmapLevel.IsBeatSage())
+                if (beatmapLevel is CustomPreviewBeatmapLevel customPreviewBeatmapLevel && !customPreviewBeatmapLevel.levelID.EndsWith(" WIP"))
                 {
                     if (!songDetails.songs.FindByHash(customPreviewBeatmapLevel.GetBeatmapHash(), out var song))
                     {
