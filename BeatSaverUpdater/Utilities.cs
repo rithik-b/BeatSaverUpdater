@@ -15,10 +15,9 @@ namespace BeatSaverUpdater
     internal static class Utilities
     {
         private static BeatSaver? beatSaverInstance;
-        private static ConcurrentDictionary<string, Beatmap?>? cachedMaps;
 
-        public static string GetBeatmapHash(this IPreviewBeatmapLevel beatmapLevel) =>
-            beatmapLevel.levelID.Replace(CustomLevelLoader.kCustomLevelPrefixId, "");
+        public static string GetBeatmapHash(this CustomPreviewBeatmapLevel beatmapLevel) =>
+            SongCore.Utilities.Hashing.GetCustomLevelHash(beatmapLevel);
 
         public static bool IsBeatSage(this CustomPreviewBeatmapLevel beatmapLevel)
         {
@@ -37,44 +36,32 @@ namespace BeatSaverUpdater
             return false;
         }
 
-        public static async Task<Beatmap?> GetBeatSaverBeatmap(this IPreviewBeatmapLevel beatmapLevel, CancellationToken token)
+        public static async Task<Beatmap?> GetBeatSaverBeatmap(this CustomPreviewBeatmapLevel beatmapLevel, CancellationToken token)
         {
             if (beatSaverInstance == null)
             {
-                var beatSaverOptions = new BeatSaverOptions(applicationName: Plugin.Metadata.Name, version: Plugin.Metadata.HVersion.ToString());
+                var beatSaverOptions = new BeatSaverOptions(Plugin.Metadata.Name, Plugin.Metadata.HVersion.ToString());
                 beatSaverInstance = new BeatSaver(beatSaverOptions);
             }
 
             var hash = beatmapLevel.GetBeatmapHash();
-
-            if (cachedMaps != null && cachedMaps.TryGetValue(hash, out var cachedMap))
-            {
-                return cachedMap;
-            }
-            
             var map = await beatSaverInstance.BeatmapByHash(hash, token);
-
-            if (!token.IsCancellationRequested)
+            
+            if (map != null && !string.Equals(map.LatestVersion.Hash, hash, StringComparison.OrdinalIgnoreCase))
             {
-                cachedMaps ??= new ConcurrentDictionary<string, Beatmap?>();
-                if (map != null && !string.Equals(map.LatestVersion.Hash, hash, StringComparison.OrdinalIgnoreCase))
-                {
-                    cachedMaps.TryAdd(hash, map);
-                    return map;
-                }
-                cachedMaps.TryAdd(hash, null);
+                return map;
             }
 
             return null;
         }
 
-        public static async Task<bool> NeedsUpdate(this IPreviewBeatmapLevel beatmapLevel, CancellationToken token)
+        public static async Task<bool> NeedsUpdate(this CustomPreviewBeatmapLevel beatmapLevel, CancellationToken token)
         {
             var map = await beatmapLevel.GetBeatSaverBeatmap(token);
             return map != null;
         }
 
-        public static async Task<string?> UpdateBeatmap(this IPreviewBeatmapLevel beatmapLevel, CancellationToken token, IProgress<double> progress)
+        public static async Task<string?> UpdateBeatmap(this CustomPreviewBeatmapLevel beatmapLevel, CancellationToken token, IProgress<double> progress)
         {
             bool songDownloaded = false;
             while (!songDownloaded)
@@ -145,7 +132,7 @@ namespace BeatSaverUpdater
                 {
                     foreach (var entry in archive.Entries)
                     {
-                        if (!string.IsNullOrWhiteSpace(entry.Name))
+                        if (!string.IsNullOrWhiteSpace(entry.Name) && entry.Name == entry.FullName)
                         {
                             var entryPath = Path.Combine(path, entry.Name); // Name instead of FullName for better security and because song zips don't have nested directories anyway
                             if (overwrite || !File.Exists(entryPath)) // Either we're overwriting or there's no existing file

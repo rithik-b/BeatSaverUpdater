@@ -134,32 +134,35 @@ namespace BeatSaverUpdater.UI
 
         private async void Clicked(PointerEventData _)
         {
-            var newHash = (await standardLevelDetailViewController.beatmapLevel.GetBeatSaverBeatmap(CancellationToken.None))?.LatestVersion.Hash;
-
-            if (newHash != null)
+            if (standardLevelDetailViewController.beatmapLevel is CustomPreviewBeatmapLevel beatmapLevel)
             {
-                var newLevel = SongCore.Loader.GetLevelByHash(newHash ?? "");
-                if (newLevel != null)
-                {
-                    popupModal.ShowYesNoModal("Updated map already exists!", () =>
-                    {
-                        popupModal.HideModal();
-                        OpenMap(newLevel);
-                    }, "Open Map", "Dismiss");
-                    return;
-                }
-            }
+                var newHash = (await beatmapLevel.GetBeatSaverBeatmap(CancellationToken.None))?.LatestVersion.Hash;
 
-            popupModal.ShowYesNoModal("This map has an update on BeatSaver. Do you want to download it?", UpdateRequested);
+                if (newHash != null)
+                {
+                    var newLevel = SongCore.Loader.GetLevelByHash(newHash ?? "");
+                    if (newLevel != null)
+                    {
+                        popupModal.ShowYesNoModal("Updated map already exists!", () =>
+                        {
+                            popupModal.HideModal();
+                            OpenMap(newLevel);
+                        }, "Open Map", "Dismiss");
+                        return;
+                    }
+                }
+
+                popupModal.ShowYesNoModal("This map has an update on BeatSaver. Do you want to download it?", () => UpdateRequested(beatmapLevel));   
+            }
         }
 
-        private async void UpdateRequested()
+        private async void UpdateRequested(CustomPreviewBeatmapLevel beatmapLevel)
         {
             tokenSource?.Cancel();
             tokenSource = new CancellationTokenSource();
             popupModal.ShowDownloadingModal("Updating map", () => tokenSource.Cancel());
-            oldLevelHash = standardLevelDetailViewController.beatmapLevel.GetBeatmapHash();
-            downloadedLevelHash = await standardLevelDetailViewController.beatmapLevel.UpdateBeatmap(tokenSource.Token, popupModal);
+            oldLevelHash = beatmapLevel.GetBeatmapHash();
+            downloadedLevelHash = await beatmapLevel.UpdateBeatmap(tokenSource.Token, popupModal);
             if (downloadedLevelHash != null)
             {
                 SongCore.Loader.SongsLoadedEvent += OnSongsLoaded;
