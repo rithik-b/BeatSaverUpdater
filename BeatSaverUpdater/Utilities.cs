@@ -63,7 +63,7 @@ namespace BeatSaverUpdater
 
         public static async Task<string?> UpdateBeatmap(this CustomPreviewBeatmapLevel beatmapLevel, CancellationToken token, IProgress<double> progress)
         {
-            bool songDownloaded = false;
+            var songDownloaded = false;
             while (!songDownloaded)
             {
                 try
@@ -74,7 +74,7 @@ namespace BeatSaverUpdater
                         return null;
                     }
 
-                    string customSongsPath = CustomLevelPathHelper.customLevelsDirectoryPath;
+                    var customSongsPath = CustomLevelPathHelper.customLevelsDirectoryPath;
                     if (!Directory.Exists(customSongsPath))
                     {
                         Directory.CreateDirectory(customSongsPath);
@@ -105,7 +105,7 @@ namespace BeatSaverUpdater
         private static string FolderNameForBeatSaverMap(Beatmap song)
         {
             // A workaround for the max path issue and long folder names
-            string longFolderName = song.ID + " (" + song.Metadata.LevelAuthorName + " - " + song.Metadata.SongName;
+            var longFolderName = song.ID + " (" + song.Metadata.LevelAuthorName + " - " + song.Metadata.SongName;
             return longFolderName.Truncate(49, true) + ")";
         }
 
@@ -114,14 +114,14 @@ namespace BeatSaverUpdater
             Stream zipStream = new MemoryStream(zip);
             try
             {
-                ZipArchive archive = new ZipArchive(zipStream, ZipArchiveMode.Read);
-                string basePath = "";
+                var archive = new ZipArchive(zipStream, ZipArchiveMode.Read);
+                var basePath = "";
                 basePath = string.Join("", songName.Split(Path.GetInvalidFileNameChars().Concat(Path.GetInvalidPathChars()).ToArray()));
-                string path = Path.Combine(customSongsPath, basePath);
+                var path = Path.Combine(customSongsPath, basePath);
 
                 if (!overwrite && Directory.Exists(path))
                 {
-                    int pathNum = 1;
+                    var pathNum = 1;
                     while (Directory.Exists(path + $" ({pathNum})")) ++pathNum;
                     path += $" ({pathNum})";
                 }

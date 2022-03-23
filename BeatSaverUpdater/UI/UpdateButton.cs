@@ -64,8 +64,8 @@ namespace BeatSaverUpdater.UI
         private async Task InitializeAsync()
         {
             image = CreateImage();
-            using Stream? mrs = Plugin.Metadata.Assembly.GetManifestResourceStream("BeatSaverUpdater.Images.Logo.png");
-            using MemoryStream ms = new MemoryStream();
+            using var mrs = Plugin.Metadata.Assembly.GetManifestResourceStream("BeatSaverUpdater.Images.Logo.png");
+            using var ms = new MemoryStream();
             if (mrs != null)
             {
                 await mrs.CopyToAsync(ms);
@@ -81,8 +81,8 @@ namespace BeatSaverUpdater.UI
 
         private ClickableImage CreateImage()
         {
-            GameObject gameObject = new GameObject("BeatSaverUpdater");
-            ClickableImage image = gameObject.AddComponent<ClickableImage>();
+            var gameObject = new GameObject("BeatSaverUpdater");
+            var image = gameObject.AddComponent<ClickableImage>();
             image.material = BeatSaberMarkupLanguage.Utilities.ImageResources.NoGlowMat;
 
             image.rectTransform.SetParent(standardLevelDetailViewController.transform);
