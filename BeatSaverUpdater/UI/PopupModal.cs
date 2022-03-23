@@ -222,8 +222,9 @@ namespace BeatSaverUpdater.UI
         }
 
         [UIValue("references-hint")]
-        private string ReferencesHint => "Updating References will\n-Delete the old version of the map\n-Replace the old version with the new version in favourites (if favourited)" +
-                                         (Plugin.PlaylistsLibInstalled ? "\n-Replace the old version with the new version in all non-syncable playlists" : "");
+        private string ReferencesHint => "Updating References will\n-Replace the old version with the new version in favourites (if favourited)" +
+                                         (Plugin.PlaylistsLibInstalled ? "\n-Replace the old version with the new version in all non-syncable playlists" +
+                                                                         "\n-Delete the old version of the map (if it doesn't exist in syncable playlists)" : "\n-Delete the old version of the map");
 
         [UIValue("references-active")]
         private bool ReferencesActive

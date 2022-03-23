@@ -92,10 +92,12 @@ namespace BeatSaverUpdater.UI
             gameObject.AddComponent<LayoutElement>();
 
             var canvas = gameObject.AddComponent<Canvas>();
-            canvas.additionalShaderChannels |= AdditionalCanvasShaderChannels.TexCoord1;
-            canvas.additionalShaderChannels |= AdditionalCanvasShaderChannels.TexCoord2;
-            canvas.additionalShaderChannels |= AdditionalCanvasShaderChannels.Tangent;
-            canvas.additionalShaderChannels |= AdditionalCanvasShaderChannels.Normal;
+            var additionalShaderChannels = canvas.additionalShaderChannels;
+            additionalShaderChannels |= AdditionalCanvasShaderChannels.TexCoord1;
+            additionalShaderChannels |= AdditionalCanvasShaderChannels.TexCoord2;
+            additionalShaderChannels |= AdditionalCanvasShaderChannels.Tangent;
+            additionalShaderChannels |= AdditionalCanvasShaderChannels.Normal;
+            canvas.additionalShaderChannels = additionalShaderChannels;
             container.InstantiateComponent<VRGraphicRaycaster>(gameObject);
 
             var hoverHint= image.gameObject.AddComponent<HoverHint>();
@@ -210,11 +212,17 @@ namespace BeatSaverUpdater.UI
 
         private void UpdateReferencesAsync(CustomPreviewBeatmapLevel oldLevel, CustomPreviewBeatmapLevel downloadedLevel)
         {
+            var preventDelete = false;
+            
             foreach (var migrator in migrators)
             {
-                migrator.MigrateMap(oldLevel, downloadedLevel);
+                preventDelete = preventDelete || migrator.MigrateMap(oldLevel, downloadedLevel);
             }
-            SongCore.Loader.Instance.DeleteSong(oldLevel.customLevelPath);
+
+            if (!preventDelete)
+            {
+                SongCore.Loader.Instance.DeleteSong(oldLevel.customLevelPath);
+            }
         }
     }
 }
