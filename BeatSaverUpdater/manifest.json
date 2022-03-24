@@ -3,15 +3,15 @@
     "id": "BeatSaverUpdater",
     "name": "BeatSaverUpdater",
     "author": "PixelBoom",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Alerts you of updates to maps and updates them to the latest version.",
-    "gameVersion": "1.19.0",
+    "gameVersion": "1.20.0",
     "icon": "BeatSaverUpdater.Images.Logo.png",
     "dependsOn": {
-        "BSIPA": "^4.2.1",
-        "BeatSaberMarkupLanguage": "^1.6.1",
-        "SongCore": "^3.8.0",
-        "SiraUtil": "^3.0.3",
+        "BSIPA": "^4.2.2",
+        "BeatSaberMarkupLanguage": "^1.6.2",
+        "SongCore": "^3.9.5",
+        "SiraUtil": "^3.0.5",
         "BeatSaverSharp": "^3.4.2"
     },
     "links": {
