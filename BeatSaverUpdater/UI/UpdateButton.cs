@@ -124,7 +124,7 @@ namespace BeatSaverUpdater.UI
             {
                 if (beatmapLevel is CustomPreviewBeatmapLevel customPreviewBeatmapLevel && !customPreviewBeatmapLevel.levelID.EndsWith(" WIP"))
                 {
-                    if (songDetailsWrapper == null || !await songDetailsWrapper.SongExists(customPreviewBeatmapLevel.GetBeatmapHash()))
+                    if (!PluginConfig.Instance.UseCache || songDetailsWrapper == null || !await songDetailsWrapper.SongExists(customPreviewBeatmapLevel.GetBeatmapHash()))
                     {
                         image.gameObject.SetActive(await customPreviewBeatmapLevel.NeedsUpdate(tokenSource.Token));
                         return;

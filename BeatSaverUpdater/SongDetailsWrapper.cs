@@ -2,7 +2,7 @@
 
 namespace BeatSaverUpdater
 {
-    public class SongDetailsWrapper
+    internal class SongDetailsWrapper
     {
         public async Task<bool> SongExists(string hash)
         {

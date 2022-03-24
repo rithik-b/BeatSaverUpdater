@@ -1,0 +1,3 @@
+﻿<settings-container xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+	<toggle-setting value='use-cache' text='Use Cached Data' hover-hint='Use cached data to determine if a map needs to be updated. Faster, but could be inaccurate for maps that got updated very recently.' />
+</settings-container>

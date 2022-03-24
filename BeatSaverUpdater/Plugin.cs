@@ -1,6 +1,8 @@
 ﻿using BeatSaverUpdater.Migration;
 using BeatSaverUpdater.UI;
 using IPA;
+using IPA.Config;
+using IPA.Config.Stores;
 using IPA.Loader;
 using SiraUtil.Zenject;
 using IPALogger = IPA.Logging.Logger;
@@ -14,7 +16,7 @@ namespace BeatSaverUpdater
         internal static IPALogger Log { get; private set; } = null!;
         internal static PluginMetadata Metadata { get; private set; } = null!;
         internal static bool PlaylistsLibInstalled => PluginManager.GetPluginFromId("BeatSaberPlaylistsLib") != null;
-        internal static bool SongDetailsInstalled => PluginManager.GetPluginFromId("SongDetailsCache") != null;
+        private static bool SongDetailsInstalled => PluginManager.GetPluginFromId("SongDetailsCache") != null;
 
         [Init]
         /// <summary>
@@ -22,25 +24,27 @@ namespace BeatSaverUpdater
         /// [Init] methods that use a Constructor or called before regular methods like InitWithConfig.
         /// Only use [Init] with one Constructor.
         /// </summary>
-        public Plugin(IPALogger logger, Zenjector zenjector, PluginMetadata metadata)
+        public Plugin(IPALogger logger, Zenjector zenjector, PluginMetadata metadata, Config conf)
         {
             Instance = this;
-            Plugin.Log = logger;
+            Log = logger;
             Metadata = metadata;
-            zenjector.Install(Location.Menu, (Container) =>
+            PluginConfig.Instance = conf.Generated<PluginConfig>();
+            zenjector.Install(Location.Menu, (container) =>
             {
-                Container.BindInterfacesTo<UpdateButton>().AsSingle();
-                Container.Bind<PopupModal>().AsSingle();
+                container.BindInterfacesTo<UpdateButton>().AsSingle();
+                container.Bind<PopupModal>().AsSingle();
 
-                Container.BindInterfacesTo<FavouritesMigrator>().AsSingle();
+                container.BindInterfacesTo<FavouritesMigrator>().AsSingle();
                 if (PlaylistsLibInstalled)
                 {
-                    Container.BindInterfacesTo<PlaylistMigrator>().AsSingle();
+                    container.BindInterfacesTo<PlaylistMigrator>().AsSingle();
                 }
 
                 if (SongDetailsInstalled)
                 {
-                    Container.Bind<SongDetailsWrapper>().AsSingle();
+                    container.Bind<SongDetailsWrapper>().AsSingle();
+                    container.BindInterfacesTo<SettingsViewController>().AsSingle();
                 }
             });
         }

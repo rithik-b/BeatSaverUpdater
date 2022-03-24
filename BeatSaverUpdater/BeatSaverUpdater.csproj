@@ -106,6 +106,9 @@
 		<EmbeddedResource Include="manifest.json" />
 		<EmbeddedResource Include="Images\*.png" />
 		<EmbeddedResource Include="UI\*.bsml" />
+		<EmbeddedResource Update="UI\SettingsView.bsml">
+		  <SubType>Code</SubType>
+		</EmbeddedResource>
 	</ItemGroup>
 	
 	<ItemGroup>
