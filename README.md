@@ -6,7 +6,7 @@ Alerts you of updates to maps and updates them to the latest version.
 - Option to delete old map after download and migrate its references (all favourites and non syncable playlists will have the map replaced)
 
 **Important:** 
-- This uses a cache of the BeatSaver database (using SongDetailsCache) so map updates won't show up immediately! Don't worry, this isn't a bug, just want to send as few requests to BeatSaver as possible.
+- This uses a cache of the BeatSaver database by default (using SongDetailsCache) so map updates won't show up immediately! If you have SongDetailsCache installed and would like to turn this behaviour off, you can do so in Mod Settings. IF you don't have SongDetailsCache, this shouldn't apply to you.
 - This only accounts for maps that use BeatSaver's update feature and are uploaded on the same key. Reuploads do not count as an updated map.
 
 ## Download
