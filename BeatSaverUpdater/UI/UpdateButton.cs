@@ -7,7 +7,6 @@ using BeatSaberMarkupLanguage.Components;
 using BeatSaverUpdater.Migration;
 using HMUI;
 using IPA.Utilities;
-using SongDetailsCache;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -19,7 +18,6 @@ namespace BeatSaverUpdater.UI
     internal class UpdateButton : IInitializable, IDisposable
     {
         private ClickableImage? image;
-        private SongDetails? songDetails;
         private CancellationTokenSource? tokenSource;
         private string? oldLevelHash;
         private string? downloadedLevelHash;
@@ -32,9 +30,11 @@ namespace BeatSaverUpdater.UI
         private readonly StandardLevelDetailViewController standardLevelDetailViewController;
         private readonly PopupModal popupModal;
         private readonly List<IMigrator> migrators;
+        private SongDetailsWrapper? songDetailsWrapper;
 
         public UpdateButton(DiContainer container, HoverHintController hoverHintController, SelectLevelCategoryViewController selectLevelCategoryViewController,
-            LevelCollectionNavigationController levelCollectionNavigationController, StandardLevelDetailViewController standardLevelDetailViewController, PopupModal popupModal, List<IMigrator> migrators)
+            LevelCollectionNavigationController levelCollectionNavigationController, StandardLevelDetailViewController standardLevelDetailViewController,
+            PopupModal popupModal, List<IMigrator> migrators, [InjectOptional] SongDetailsWrapper? songDetailsWrapper)
         {
             this.container = container;
             this.hoverHintController = hoverHintController;
@@ -44,6 +44,7 @@ namespace BeatSaverUpdater.UI
             this.standardLevelDetailViewController = standardLevelDetailViewController;
             this.popupModal = popupModal;
             this.migrators = migrators;
+            this.songDetailsWrapper = songDetailsWrapper;
         }
 
         public void Initialize()
@@ -75,8 +76,6 @@ namespace BeatSaverUpdater.UI
             image.sprite = BeatSaberMarkupLanguage.Utilities.LoadSpriteRaw(ms.ToArray());
             image.sprite.texture.wrapMode = TextureWrapMode.Clamp;
             image.gameObject.SetActive(false);
-
-            songDetails = await SongDetails.Init();
         }
 
         private ClickableImage CreateImage()
@@ -121,11 +120,11 @@ namespace BeatSaverUpdater.UI
             tokenSource?.Dispose();
             tokenSource = new CancellationTokenSource();
 
-            if (image != null && songDetails != null)
+            if (image != null)
             {
                 if (beatmapLevel is CustomPreviewBeatmapLevel customPreviewBeatmapLevel && !customPreviewBeatmapLevel.levelID.EndsWith(" WIP"))
                 {
-                    if (!songDetails.songs.FindByHash(customPreviewBeatmapLevel.GetBeatmapHash(), out var song))
+                    if (songDetailsWrapper == null || !await songDetailsWrapper.SongExists(customPreviewBeatmapLevel.GetBeatmapHash()))
                     {
                         image.gameObject.SetActive(await customPreviewBeatmapLevel.NeedsUpdate(tokenSource.Token));
                         return;

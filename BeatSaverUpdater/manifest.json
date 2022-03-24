@@ -12,7 +12,7 @@
         "BeatSaberMarkupLanguage": "^1.6.1",
         "SongCore": "^3.8.0",
         "SiraUtil": "^3.0.3",
-        "SongDetailsCache": "^1.1.11"
+        "BeatSaverSharp": "^3.4.2"
     },
     "links": {
         "project-source": "https://github.com/rithik-b/BeatSaverUpdater",

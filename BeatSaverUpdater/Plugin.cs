@@ -14,6 +14,7 @@ namespace BeatSaverUpdater
         internal static IPALogger Log { get; private set; } = null!;
         internal static PluginMetadata Metadata { get; private set; } = null!;
         internal static bool PlaylistsLibInstalled => PluginManager.GetPluginFromId("BeatSaberPlaylistsLib") != null;
+        internal static bool SongDetailsInstalled => PluginManager.GetPluginFromId("SongDetailsCache") != null;
 
         [Init]
         /// <summary>
@@ -35,6 +36,11 @@ namespace BeatSaverUpdater
                 if (PlaylistsLibInstalled)
                 {
                     Container.BindInterfacesTo<PlaylistMigrator>().AsSingle();
+                }
+
+                if (SongDetailsInstalled)
+                {
+                    Container.Bind<SongDetailsWrapper>().AsSingle();
                 }
             });
         }
